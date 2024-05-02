@@ -1,5 +1,6 @@
 import { ChangeEvent, FormEvent, useReducer } from "react";
-import { PaymentType } from "../../data/DataFunctions";
+import { PaymentType, addNewTransaction } from "../../data/DataFunctions";
+import { useNavigate } from "react-router-dom";
 
 const NewTransaction = () : JSX.Element =>{
 
@@ -8,12 +9,20 @@ const NewTransaction = () : JSX.Element =>{
         return {...state, [data.field] : data.value}
     }
 
+    const navigate = useNavigate();
+
     // const [country, setCountry] = useState<String>("");
     // console.log(country);
     const handlesubmit = (e : FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         // console.log("saving " + country);
-        console.log("saving object "+ newTransaction);
+        // console.log("saving object "+ newTransaction);
+        addNewTransaction(newTransaction).then(result => {
+            console.log(result.data);
+            const country = result.data.country;
+            //navigate to /dinf?country=...
+            navigate("/find?country="+country);
+        })
     }
 
     const initialNewTransactionState: PaymentType = {

@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useReducer } from "react";
+import { ChangeEvent, FormEvent, useEffect, useReducer, useRef } from "react";
 import { PaymentType, addNewTransaction } from "../../data/DataFunctions";
 import { useNavigate } from "react-router-dom";
 
@@ -27,7 +27,7 @@ const NewTransaction = () : JSX.Element =>{
 
     const initialNewTransactionState: PaymentType = {
         id : null,
-        orderId: "ab56",
+        orderId: "",
         date: new Date().toISOString().slice(0, 10),
         amount: 0,
         country: "USA",
@@ -44,10 +44,15 @@ const NewTransaction = () : JSX.Element =>{
         dispatch({field: e.target.id, value: e.target.value});
     }
 
+    const orderIdInput = useRef<HTMLInputElement | null>(null);
+    useEffect( () => {
+            orderIdInput.current?.focus();
+        }, [])
+
     return (<form className="addTransactionsForm" onSubmit={handlesubmit}>
     <h2>New transaction</h2>
     <label htmlFor="orderId">Order Id</label>
-    <input type="text" id="orderId" onChange={handleChange} value={newTransaction.orderId}/>
+    <input type="text" id="orderId" ref={orderIdInput} onChange={handleChange} value={newTransaction.orderId}/>
     <br/>
     <label htmlFor="date">Date</label>
     <input type="date" id="date" onChange={handleChange} value={newTransaction.date}/>
